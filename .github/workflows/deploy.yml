@@ -1,0 +1,90 @@
+# GitHub Actions CI/CD workflow for the NYC Payroll Batch Pipeline.
+#
+# Prerequisites — add these GitHub repository secrets:
+#   DATABRICKS_HOST : Your Databricks workspace URL
+#                      (https://dbc-c7d9691f-c2c1.cloud.databricks.com)
+#   SP_TOKEN        : Databricks access token for a service principal
+#                      (see README.md → CI/CD Setup for how to create one)
+#
+# Workflow overview:
+#   Pull requests to main → validate + deploy to the "dev" target
+#   Pushes to main        → validate + deploy + run the "prod" target
+
+name: CI/CD - NYC Payroll Pipeline
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Dev deployment (triggered on pull requests) ──────────────────────
+  dev-deploy:
+    name: Deploy to Dev
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Validate bundle
+        run: databricks bundle validate
+        working-directory: .
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_BUNDLE_TARGET: dev
+
+      - name: Deploy bundle to dev
+        run: databricks bundle deploy
+        working-directory: .
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_BUNDLE_TARGET: dev
+
+  # ─── Production deployment (triggered on push to main) ─────────────────
+  prod-deploy:
+    name: Deploy to Prod
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Validate bundle
+        run: databricks bundle validate
+        working-directory: .
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_BUNDLE_TARGET: prod
+
+      - name: Deploy bundle to prod
+        run: databricks bundle deploy
+        working-directory: .
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_BUNDLE_TARGET: prod
+
+      # Optional: run the pipeline automatically after deployment.
+      # Comment this step out if you prefer to trigger runs manually
+      # from the Databricks Jobs UI.
+      - name: Run pipeline
+        run: databricks bundle run payroll_batch_pipeline
+        working-directory: .
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_BUNDLE_TARGET: prod

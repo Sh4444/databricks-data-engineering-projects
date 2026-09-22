@@ -1,0 +1,84 @@
+# Declarative Automation Bundle for NYC Payroll Batch Pipeline
+# This bundle defines a multi-task job that:
+#   1. Watches for an incoming CSV file (fwnb)
+#   2. Ingests, validates, and loads to staging (01_pvtnb)
+#   3. Performs SCD Type 2 merge into the target table (02_scdnb)
+#   4. Archives the processed file (03_archivenb)
+#
+# The shared utility notebook (00_audit_utilsnb) is called via %run
+# from tasks 2 and 3 and does not need a separate job task.
+
+bundle:
+  name: payroll_employee_nyc
+
+variables:
+  catalog:
+    description: Unity Catalog for pipeline tables
+    default: workspace
+  schema:
+    description: Schema for pipeline tables
+    default: shprod
+
+resources:
+  jobs:
+    payroll_batch_pipeline:
+      name: NYC Payroll Batch Pipeline
+      max_concurrent_runs: 1
+
+      # Serverless compute — no job_clusters needed; each task
+      # automatically runs on serverless when no cluster is specified.
+      tasks:
+        # Task 1: File Watcher — polls landing zone for payrolldata.csv
+        - task_key: file_watch
+          notebook_task:
+            notebook_path: ./scripts/fwnb
+
+        # Task 2: Ingest & Validate — reads CSV, validates, quarantines
+        # bad rows, writes clean data to staging table
+        - task_key: ingest_validate
+          depends_on:
+            - task_key: file_watch
+          notebook_task:
+            notebook_path: ./scripts/01_pvtnb
+
+        # Task 3: SCD2 Merge — merges staging into target with
+        # Slowly Changing Dimension Type 2 logic
+        - task_key: scd2_merge
+          depends_on:
+            - task_key: ingest_validate
+          notebook_task:
+            notebook_path: ./scripts/02_scdnb
+
+        # Task 4: Archive — moves processed file to archive directory
+        - task_key: archive
+          depends_on:
+            - task_key: scd2_merge
+          notebook_task:
+            notebook_path: ./scripts/03_archivenb
+
+targets:
+  # Development target — deploys to your personal workspace folder.
+  # Triggered automatically on pull requests via GitHub Actions.
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-c7d9691f-c2c1.cloud.databricks.com
+    variables:
+      catalog: workspace
+      schema: shprod
+
+  # Production target — deploys to a shared production location.
+  # Triggered automatically on pushes to main via GitHub Actions.
+  # For production, set run_as to a service principal (not your user).
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-c7d9691f-c2c1.cloud.databricks.com
+      root_path: /Workspace/Users/sharfulhaque10@gmail.com/.bundle/${bundle.name}/prod
+    variables:
+      catalog: workspace
+      schema: shprod
+    permissions:
+      - user_name: sharfulhaque10@gmail.com
+        level: CAN_MANAGE
