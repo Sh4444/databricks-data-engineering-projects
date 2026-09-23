@@ -45,14 +45,15 @@ This project uses **Declarative Automation Bundles** and **GitHub Actions** for 
    - Generate an OAuth secret for the service principal
    - Grant the service principal access to the workspace and the `workspace.shprod` schema
 
-3. **Add GitHub repository secrets** (Settings -> Secrets and variables -> Actions):
+3. **Generate an access token** for the service principal using the OAuth secret and client ID.
 
-   | Secret Name          | Value                                      |
-   | -------------------- | ------------------------------------------ |
-   | `SP_CLIENT_ID`       | The service principal client ID (UUID)     |
-   | `SP_CLIENT_SECRET`   | The service principal OAuth client secret  |
+4. **Add GitHub repository secrets** (Settings -> Secrets and variables -> Actions):
 
-   The workspace host is taken from `databricks.yml` (`targets.<target>.workspace.host`).
+   | Secret Name          | Value                                                              |
+   | -------------------- | ------------------------------------------------------------------ |
+   | `DATABRICKS_HOST`    | `https://dbc-c7d9691f-c2c1.cloud.databricks.com`                  |
+   | `SP_CLIENT_ID`       | The service principal client ID (UUID)                             |
+   | `SP_CLIENT_SECRET`   | The service principal OAuth client secret                          |
 
 ### How the CI/CD Pipeline Works
 
