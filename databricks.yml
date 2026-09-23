@@ -32,7 +32,7 @@ resources:
         # Task 1: File Watcher — polls landing zone for payrolldata.csv
         - task_key: file_watch
           notebook_task:
-            notebook_path: ./notebooks/fwnb
+            notebook_path: ./notebooks/fwnb.ipynb
 
         # Task 2: Ingest & Validate — reads CSV, validates, quarantines
         # bad rows, writes clean data to staging table
@@ -40,7 +40,7 @@ resources:
           depends_on:
             - task_key: file_watch
           notebook_task:
-            notebook_path: ./notebooks/01_pvtnb
+            notebook_path: ./notebooks/01_pvtnb.ipynb
 
         # Task 3: SCD2 Merge — merges staging into target with
         # Slowly Changing Dimension Type 2 logic
@@ -48,14 +48,14 @@ resources:
           depends_on:
             - task_key: ingest_validate
           notebook_task:
-            notebook_path: ./notebooks/02_scdnb
+            notebook_path: ./notebooks/02_scdnb.ipynb
 
         # Task 4: Archive — moves processed file to archive directory
         - task_key: archive
           depends_on:
             - task_key: scd2_merge
           notebook_task:
-            notebook_path: ./notebooks/03_archivenb
+            notebook_path: ./notebooks/03_archivenb.ipynb
 
 targets:
   # Development target — deploys to your personal workspace folder.
