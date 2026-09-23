@@ -6,12 +6,12 @@ A batch data engineering pipeline for NYC payroll data built on Databricks. The 
 
 The pipeline runs as a multi-task Databricks job with four sequential tasks:
 
-1. **File Watch** (`scripts/fwnb`) — Polls a landing zone for `payrolldata.csv`
-2. **Ingest & Validate** (`scripts/01_pvtnb`) — Reads the CSV, generates surrogate keys, validates records, quarantines invalid/duplicate rows, and writes clean data to a staging table
-3. **SCD2 Merge** (`scripts/02_scdnb`) — Performs a Slowly Changing Dimension Type 2 merge from staging into the target table using Delta `MERGE`
-4. **Archive** (`scripts/03_archivenb`) — Moves the processed file to an archive directory
+1. **File Watch** (`notebooks/fwnb`) — Polls a landing zone for `payrolldata.csv`
+2. **Ingest & Validate** (`notebooks/01_pvtnb`) — Reads the CSV, generates surrogate keys, validates records, quarantines invalid/duplicate rows, and writes clean data to a staging table
+3. **SCD2 Merge** (`notebooks/02_scdnb`) — Performs a Slowly Changing Dimension Type 2 merge from staging into the target table using Delta `MERGE`
+4. **Archive** (`notebooks/03_archivenb`) — Moves the processed file to an archive directory
 
-A shared utility notebook (`scripts/00_audit_utilsnb`) provides audit logging (run logs + execution step logs) and is called via `%run` from tasks 2 and 3.
+A shared utility notebook (`notebooks/00_audit_utilsnb`) provides audit logging (run logs + execution step logs) and is called via `%run` from tasks 2 and 3.
 
 ## Project Structure
 
@@ -19,7 +19,7 @@ A shared utility notebook (`scripts/00_audit_utilsnb`) provides audit logging (r
 .
 ├── databricks.yml                 # Declarative Automation Bundle configuration
 ├── .github/workflows/deploy.yml   # GitHub Actions CI/CD workflow
-├── scripts/
+├── notebooks/
 │   ├── 00_audit_utilsnb.ipynb     # Shared audit logging utility (not a standalone task)
 │   ├── 01_pvtnb.ipynb             # Ingest, validate, and write to staging
 │   ├── 02_scdnb.ipynb             # SCD Type 2 merge into target table
@@ -86,3 +86,5 @@ databricks bundle run payroll_batch_pipeline -t dev
 - **Schedule**: Add a `schedule` block to the job definition in `databricks.yml` to run the pipeline on a cadence.
 - **Production `run_as`**: For the `prod` target, set `run_as` to a service principal instead of your user account.
 - **Catalog/Schema**: Adjust the `catalog` and `schema` variables in `databricks.yml` or override them per target.
+
+
