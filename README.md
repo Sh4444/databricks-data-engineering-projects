@@ -49,10 +49,11 @@ This project uses **Declarative Automation Bundles** and **GitHub Actions** for 
 
 4. **Add GitHub repository secrets** (Settings -> Secrets and variables -> Actions):
 
-   | Secret Name         | Value                                      |
-   | ------------------- | ------------------------------------------ |
-   | `SP_CLIENT_ID`      | The service principal client ID (UUID)     |
-   | `SP_CLIENT_SECRET`  | The service principal OAuth client secret  |
+   | Secret Name          | Value                                      |
+   | -------------------- | ------------------------------------------ |
+   | `DATABRICKS_TOKEN`   | Personal access token for PR dev deploys   |
+   | `SP_CLIENT_ID`       | The service principal client ID (UUID)     |
+   | `SP_CLIENT_SECRET`   | The service principal OAuth client secret  |
 
    The workspace host is taken from `databricks.yml` (`targets.<target>.workspace.host`).
 
@@ -88,4 +89,3 @@ databricks bundle run payroll_batch_pipeline -t dev
 - **Schedule**: Add a `schedule` block to the job definition in `databricks.yml` to run the pipeline on a cadence.
 - **Production `run_as`**: For the `prod` target, set `run_as` to a service principal instead of your user account.
 - **Catalog/Schema**: Adjust the `catalog` and `schema` variables in `databricks.yml` or override them per target.
-
