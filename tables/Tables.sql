@@ -3,7 +3,7 @@
 use shprod;
 
 -- 1. Pipeline Run Lifecycle Log (RUNLOG)
-CREATE TABLE IF NOT EXISTS shprod.audit_runlog (
+CREATE OR REPLACE TABLE shprod.audit_runlog (
     run_id INTEGER NOT NULL PRIMARY KEY,
     active_dt date,
     pipeline_name STRING,
