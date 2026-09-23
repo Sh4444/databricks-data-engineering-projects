@@ -65,7 +65,7 @@ targets:
     default: true
     workspace:
       host: https://dbc-c7d9691f-c2c1.cloud.databricks.com
-      root_path: /Workspace/Users/sharfulhaque10@gmail.com/.bundle/${bundle.name}/dev
+      root_path: ~/.bundle/${bundle.name}/dev
     variables:
       catalog: workspace
       schema: shprod
