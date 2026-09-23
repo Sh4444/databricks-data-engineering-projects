@@ -52,7 +52,8 @@ This project uses **Declarative Automation Bundles** and **GitHub Actions** for 
    | Secret Name        | Value                                                              |
    | ------------------ | ------------------------------------------------------------------ |
    | `DATABRICKS_HOST`  | `https://dbc-c7d9691f-c2c1.cloud.databricks.com`                  |
-   | `SP_TOKEN`         | The access token for the Databricks service principal              |
+   | `SP_CLIENT_ID`     | The service principal client ID (UUID)                             |
+| `SP_CLIENT_SECRET` | The service principal OAuth client secret                          |
 
 ### How the CI/CD Pipeline Works
 
