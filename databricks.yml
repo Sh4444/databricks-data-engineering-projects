@@ -77,10 +77,12 @@ targets:
     mode: production
     workspace:
       host: https://dbc-c7d9691f-c2c1.cloud.databricks.com
-      root_path: /Workspace/Users/sharfulhaque10@gmail.com/.bundle/${bundle.name}/prod
+      root_path: ~/.bundle/${bundle.name}/prod
     variables:
       catalog: workspace
       schema: shprod
     permissions:
+      - service_principal_name: 3fadd604-76b6-472d-b651-567342d47923
+        level: CAN_MANAGE
       - user_name: sharfulhaque10@gmail.com
         level: CAN_MANAGE
