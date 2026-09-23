@@ -45,13 +45,10 @@ This project uses **Declarative Automation Bundles** and **GitHub Actions** for 
    - Generate an OAuth secret for the service principal
    - Grant the service principal access to the workspace and the `workspace.shprod` schema
 
-3. **Generate an access token** for the service principal using the OAuth secret and client ID.
-
-4. **Add GitHub repository secrets** (Settings -> Secrets and variables -> Actions):
+3. **Add GitHub repository secrets** (Settings -> Secrets and variables -> Actions):
 
    | Secret Name          | Value                                      |
    | -------------------- | ------------------------------------------ |
-   | `DATABRICKS_TOKEN`   | Personal access token for PR dev deploys   |
    | `SP_CLIENT_ID`       | The service principal client ID (UUID)     |
    | `SP_CLIENT_SECRET`   | The service principal OAuth client secret  |
 

@@ -1,7 +1,6 @@
 # GitHub Actions CI/CD workflow for the NYC Payroll Batch Pipeline.
 #
 # Prerequisites — add these GitHub repository secrets:
-#   DATABRICKS_TOKEN : Personal access token used for PR dev deployments
 #   SP_CLIENT_ID    : Service principal client ID (UUID)
 #   SP_CLIENT_SECRET: Service principal OAuth client secret
 #                      (see README.md → CI/CD Setup for how to create one)
@@ -39,16 +38,18 @@ jobs:
         run: databricks bundle validate
         working-directory: .
         env:
-          DATABRICKS_AUTH_TYPE: pat
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          DATABRICKS_AUTH_TYPE: oauth-m2m
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: dev
 
       - name: Deploy bundle to dev
         run: databricks bundle deploy
         working-directory: .
         env:
-          DATABRICKS_AUTH_TYPE: pat
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          DATABRICKS_AUTH_TYPE: oauth-m2m
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: dev
 
   # ─── Production deployment (triggered on push to main) ─────────────────
