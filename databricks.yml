@@ -1,4 +1,5 @@
 # Declarative Automation Bundle for NYC Payroll Batch Pipeline
+# Notebooks are in the ./notebooks/ directory.
 # This bundle defines a multi-task job that:
 #   1. Watches for an incoming CSV file (fwnb)
 #   2. Ingests, validates, and loads to staging (01_pvtnb)
