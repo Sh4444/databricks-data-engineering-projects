@@ -1,2 +1,2 @@
 # Databricks SQL queries (.dbquery.ipynb) are not supported by Git folders
-tables/Tables.sql
+scripts/Tables.sql

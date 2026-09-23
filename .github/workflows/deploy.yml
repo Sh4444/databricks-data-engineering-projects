@@ -3,7 +3,8 @@
 # Prerequisites — add these GitHub repository secrets:
 #   DATABRICKS_HOST : Your Databricks workspace URL
 #                      (https://dbc-c7d9691f-c2c1.cloud.databricks.com)
-#   SP_TOKEN        : Databricks access token for a service principal
+#   SP_CLIENT_ID    : Service principal client ID (UUID)
+#   SP_CLIENT_SECRET: Service principal OAuth client secret
 #                      (see README.md → CI/CD Setup for how to create one)
 #
 # Workflow overview:
@@ -40,7 +41,8 @@ jobs:
         working-directory: .
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: dev
 
       - name: Deploy bundle to dev
@@ -48,7 +50,8 @@ jobs:
         working-directory: .
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: dev
 
   # ─── Production deployment (triggered on push to main) ─────────────────
@@ -67,7 +70,8 @@ jobs:
         working-directory: .
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: prod
 
       - name: Deploy bundle to prod
@@ -75,7 +79,8 @@ jobs:
         working-directory: .
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: prod
 
       # Optional: run the pipeline automatically after deployment.
@@ -86,5 +91,6 @@ jobs:
         working-directory: .
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           DATABRICKS_BUNDLE_TARGET: prod
