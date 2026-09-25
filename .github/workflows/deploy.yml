@@ -86,11 +86,11 @@ jobs:
       # Optional: run the pipeline automatically after deployment.
       # Comment this step out if you prefer to trigger runs manually
       # from the Databricks Jobs UI.
-      - name: Run pipeline
-        run: databricks bundle run payroll_batch_pipeline
-        working-directory: .
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
-          DATABRICKS_BUNDLE_TARGET: prod
+      #- name: Run pipeline
+        #run: databricks bundle run payroll_batch_pipeline
+        #working-directory: .
+        #env:
+          #DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          #DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          #DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
+          #DATABRICKS_BUNDLE_TARGET: prod
