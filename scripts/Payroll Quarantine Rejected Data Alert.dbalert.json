@@ -1,0 +1,55 @@
+{
+  "custom_summary": "⚠️ Payroll Employee NYC Data Quarantine Alert:: @QUERY_RESULT_VALUE rejected records found",
+  "evaluation": {
+    "source": {
+      "name": "rejected_count"
+    },
+    "comparison_operator": "GREATER_THAN",
+    "threshold": {
+      "value": {
+        "double_value": 0.0
+      }
+    },
+    "notification": {
+      "retrigger_seconds": 1,
+      "notify_on_ok": true
+    }
+  },
+  "schedule": {
+    "quartz_cron_schedule": "0 0 8 * * ?",
+    "timezone_id": "UTC"
+  },
+  "query_lines": [
+    "SELECT COUNT(*) AS rejected_count, MAX(run_id) AS run_id, MAX(quarantined_at) AS latest_quarantine_time, ARRAY_JOIN(ARRAY_SORT(ARRAY_AGG(DISTINCT rejection_reason)), '; ') AS rejection_reasons FROM workspace.shprod.payroll_quarantine WHERE run_id = (SELECT COALESCE(MAX(run_id), 0) FROM workspace.shprod.payroll_quarantine)"
+  ],
+  "custom_description_lines": [
+    "Hi Team,",
+    "",
+    "This is system generated mail. Please Do Not Reply as its not monitored.",
+    "",
+    "Below are the rejected count due to mention reason received in file today.",
+    "",
+    "### Summary:",
+    "",
+    "@QUERY_RESULT_TABLE",
+    "",
+    "---",
+    "",
+    "Click the link below to open the alert page, then click **Download** to export all rejected records as a CSV file for detailed analysis:",
+    "",
+    "[👉 Download Rejected Records CSV](@ALERT_URL)",
+    "<p>&nbsp;</p>",
+    "",
+    "Regards,",
+    "",
+    "Data Engineer Team.",
+    "<p>&nbsp;</p>"
+  ],
+  "parameters": [
+    {
+      "name": "rejcnt",
+      "value": "Reject count",
+      "type": "STRING"
+    }
+  ]
+}
