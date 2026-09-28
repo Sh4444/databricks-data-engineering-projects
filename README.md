@@ -13,21 +13,24 @@ The pipeline runs as a multi-task Databricks job with four sequential tasks:
 
 A shared utility notebook (`notebooks/00_audit_utilsnb`) provides audit logging (run logs + execution step logs) and is called via `%run` from tasks 2 and 3.
 
-## Project Structure
 
-```
-.
-├── databricks.yml                 # Declarative Automation Bundle configuration
-├── .github/workflows/deploy.yml   # GitHub Actions CI/CD workflow
-├── notebooks/
-│   ├── 00_audit_utilsnb.ipynb     # Shared audit logging utility (not a standalone task)
-│   ├── 01_pvtnb.ipynb             # Ingest, validate, and write to staging
-│   ├── 02_scdnb.ipynb             # SCD Type 2 merge into target table
-│   ├── 03_archivenb.ipynb         # Archive processed file
-│   └── fwnb.ipynb                 # File watcher — polls for incoming CSV
-└── tables/
-    └── Tables.sql                 # DDL for pipeline tables
-```
+## 🏗️ End-to-End Architecture
+
+This project implements an end-to-end Databricks data engineering pipeline for NYC Payroll Employees.
+
+![Payroll Employees NYC Architecture](docs/payroll_employee_nyc_architecture.png)
+
+### Pipeline Flow
+
+Cron Trigger → FW → PVT → SCD → Archive → Email Notification
+
+- **FW** – Framework
+- **PVT** – Pivot Transformation
+- **SCD** – Slowly Changing Dimension
+- **REJ_ALERTS** – Rejection/SQL alerts
+- **View Refresh** – Refresh SQL views
+- **Archive** – Archive processed data
+- **Email Notifications** – Success & failure notifications
 
 ## CI/CD Setup
 
