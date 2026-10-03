@@ -29,6 +29,8 @@ jobs:
   dev-deploy:
     name: Deploy to Dev
     if: github.event_name == 'pull_request'
+    environment:
+      name: DEV
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,6 +60,8 @@ jobs:
   prod-deploy:
     name: Deploy to Prod
     if: github.event_name == 'push'
+    environment:
+      name: PROD
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
